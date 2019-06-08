@@ -1,3 +1,11 @@
+  //Moment.js
+
+  var currentTime = moment();
+  var currentTimeConverted = moment(currentTime).format("HH:mm")
+  
+  $("#currentTime").text(currentTimeConverted)
+
+  
 var firebaseConfig = {
     apiKey: "AIzaSyCP-9Xzy5U9DrewOg_I_rF--V0uHf6ocns",
     authDomain: "train-scheduler-782bf.firebaseapp.com",
@@ -18,7 +26,6 @@ var firebaseConfig = {
   var firstTrain;
   var frequency = 0;
 
-
   //Click event listener to capture user input
   $("#submitTrain").on("click", function(event) {
     event.preventDefault();
@@ -29,7 +36,7 @@ var firebaseConfig = {
   frequency = $("#frequency").val().trim();
 
     //Push values to database
-    database.ref().push({
+    database.ref("trains").push({
       trainName: trainName,
       destination: destination,
       firstTrain: firstTrain,
@@ -42,14 +49,29 @@ var firebaseConfig = {
 
   });
 
-  database.ref().on("child_added", function(snapshot) {
+  database.ref("trains").on("child_added", function(snapshot) {
 
     var sv = snapshot.val();
 
-    console.log(sv.trainName)
-    console.log(sv.destination)
-    console.log(sv.firstTrain)
-    console.log(sv.frequency)
+    //Calculate next arrivals and minutes away with Moment.js
+
+    var tFrequency = sv.frequency;
+    var firstTime = sv.firstTrain;
+
+    var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
+
+    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+
+    var tRemainder = diffTime % tFrequency;
+
+    var tNextTrain = tFrequency - tRemainder;
+
+    var arrivalTime = moment().add(tNextTrain, "minutes");
+
+    var arrivalTimeConverted = moment(arrivalTime).format("HH:mm")
+
+
+    //Append all values to table
 
     var tr = $("<tr>");
     var td = "<td>"
@@ -57,8 +79,8 @@ var firebaseConfig = {
     tr.append($(td).text(sv.trainName))
     tr.append($(td).text(sv.destination))
     tr.append($(td).text(sv.frequency))
-    tr.append($(td).text(sv.firstTrain))
-    tr.append($(td).text("--"))
+    tr.append($(td).text(arrivalTimeConverted))
+    tr.append($(td).text(tNextTrain))
 
     var tbody = $("tbody")
 
@@ -67,3 +89,29 @@ var firebaseConfig = {
   }, function(errorObject) {
     console.log("Errors handled: " + errorObject.code)
   })
+
+  // TODO: Refresh page by the minute
+    // -- create function to get current time every 30s
+    // -- set new value for time in firebase at every check
+    // -- create event listener to check for value changes in firebase
+    // -- everytime the value changes (everytime the time changes by a minute):
+      // -- recalculate table values, clear table, repost new values
+
+  checkTime = function(){
+    currentTime = moment();
+    currentTimeConverted = moment(currentTime).format("HH:mm")
+
+    $("#currentTime").text(currentTimeConverted)
+  }
+
+   //Event listener for database value changes
+
+   database.ref("time").on("value", function(snapshot){
+    database.ref("time").set({
+      currentTimeFB: currentTimeConverted
+    })
+
+
+  })
+
+  
