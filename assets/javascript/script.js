@@ -52,11 +52,13 @@ var firebaseConfig = {
     console.log(sv.frequency)
 
     var tr = $("<tr>");
+    var td = "<td>"
 
-    tr.append($("<td>").text(sv.trainName))
-    tr.append($("<td>").text(sv.destination))
-    tr.append($("<td>").text(sv.firstTrain))
-    tr.append($("<td>").text(sv.frequency))
+    tr.append($(td).text(sv.trainName))
+    tr.append($(td).text(sv.destination))
+    tr.append($(td).text(sv.frequency))
+    tr.append($(td).text(sv.firstTrain))
+    tr.append($(td).text("--"))
 
     var tbody = $("tbody")
 
@@ -65,16 +67,3 @@ var firebaseConfig = {
   }, function(errorObject) {
     console.log("Errors handled: " + errorObject.code)
   })
-
-
-
-
-  var tr = $("<tr>")
-
-
-  tr.append("<td>" + trainName + "</td>")
-  tr.append("#destination")
-  tr.append("#firstTrain")
-  tr.append("#frequency")
-
-  $("#tableBody").append(tr)
