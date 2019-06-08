@@ -10,6 +10,9 @@
     <title>Train Scheduler</title>
     </head>
     <body>
+        <video autoplay loop id="background">
+            <source src="assets/images/17_train_passing_amongst_buildings.mov" type="video/mp4">
+        </video>
         <div class="container">
             <div class="jumbotron jumbotron-fluid text-center bg-light text-dark">
                 <h1>You're waiting for a train.</h1>
@@ -18,7 +21,7 @@
 
             <div class="row" id="train-schedule">
             <table class="table table-striped">
-                <label class="bg-danger text-white head" for="train-schedule">Current Train Schedule</label>
+                <label class="bg-primary text-white head" for="train-schedule">Current Train Schedule</label>
                 <thead>
                 <tr>
                     <th scope="col">Train Name</th>
@@ -35,7 +38,7 @@
             </div>
             <br><br>
             <div class="row" id="add-train">
-            <label class="bg-danger text-white head" for="add-train">Add Train</label>
+            <label class="bg-primary text-white head" for="add-train">Add Train</label>
             <form>
                 <label class="input" for="train-name">Train Name</label>
                 <br>
@@ -54,8 +57,8 @@
                 <input type="number" id="frequency" name="frequency" placeholder="Enter the frequency of your train in minutes">
                 <hr>
                 <span>
-                    <button type="submit" value="submit" class="btn btn-lg btn-danger text-white">Submit</button>
-                    <button type="reset" value="reset" class="btn btn-lg btn-danger text-white">Clear</button>
+                    <button type="submit" value="submit" class="btn btn-lg btn-primary text-white">Submit</button>
+                    <button type="reset" value="reset" class="btn btn-lg btn-primary text-white">Clear</button>
                 </span>
                 <br><br>
             </form>
