@@ -28,11 +28,6 @@ var firebaseConfig = {
   firstTrain = $("#first-train").val().trim();
   frequency = $("#frequency").val().trim();
 
-  console.log(trainName)
-  console.log(destination)
-  console.log(firstTrain)
-  console.log(frequency)
-
     //Push values to database
     database.ref().push({
       trainName: trainName,
@@ -46,6 +41,30 @@ var firebaseConfig = {
   })
 
   });
+
+  database.ref().on("child_added", function(snapshot) {
+
+    var sv = snapshot.val();
+
+    console.log(sv.trainName)
+    console.log(sv.destination)
+    console.log(sv.firstTrain)
+    console.log(sv.frequency)
+
+    var tr = $("<tr>");
+
+    tr.append($("<td>").text(sv.trainName))
+    tr.append($("<td>").text(sv.destination))
+    tr.append($("<td>").text(sv.firstTrain))
+    tr.append($("<td>").text(sv.frequency))
+
+    var tbody = $("tbody")
+
+    $(tbody).append(tr)
+
+  }, function(errorObject) {
+    console.log("Errors handled: " + errorObject.code)
+  })
 
 
 
