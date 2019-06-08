@@ -87,7 +87,7 @@ var firebaseConfig = {
     $(tbody).append(tr)
 
   }, function(errorObject) {
-    console.log("Errors handled: " + errorObject.code)
+    console.log("Errors handled: " + errorObject)
   })
 
   // TODO: Refresh page by the minute
@@ -106,12 +106,12 @@ var firebaseConfig = {
 
    //Event listener for database value changes
 
-   database.ref("time").on("value", function(snapshot){
-    database.ref("time").set({
-      currentTimeFB: currentTimeConverted
-    })
+  //  database.ref("time").on("value", function(snapshot){
+  //   database.ref("time").set({
+  //     currentTimeFB: currentTimeConverted
+  //   })
 
 
-  })
+  // })
 
   
