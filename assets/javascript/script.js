@@ -1,7 +1,6 @@
-  //Moment.js
-
+  // Sets current time
   var currentTime = moment();
-  var currentTimeConverted = moment(currentTime).format("HH:mm")
+  var currentTimeConverted = moment(currentTime).format("HH:mm:ss")
   
   $("#currentTime").text(currentTimeConverted)
 
@@ -43,13 +42,32 @@ var firebaseConfig = {
       frequency: frequency
     })
 
+    loadTable();
+
   $("#add-train-form").each(function (){ //form reset on submit
     this.reset();
   })
 
   });
 
-  database.ref("trains").on("child_added", function(snapshot) {
+  checkTime = function(){ // Function for checking current time and printing new values
+    // Sets current time clock
+    currentTime = moment(); 
+    currentTimeConverted = moment(currentTime).format("HH:mm:ss")
+    $("#currentTime").text(currentTimeConverted) 
+
+    // Sets value for currentTimeFB to current time
+    database.ref("time").set({
+      currentTimeFB: currentTimeConverted
+    })
+  }
+
+  loadTable = function() {
+    console.log("Refreshing data...")
+    var tbody = $("tbody")
+    tbody.empty();
+    
+    database.ref("trains").on("child_added", function(snapshot) {
 
     var sv = snapshot.val();
 
@@ -82,36 +100,19 @@ var firebaseConfig = {
     tr.append($(td).text(arrivalTimeConverted))
     tr.append($(td).text(tNextTrain))
 
-    var tbody = $("tbody")
-
     $(tbody).append(tr)
 
   }, function(errorObject) {
     console.log("Errors handled: " + errorObject)
   })
+};
 
-  // TODO: Refresh page by the minute
-    // -- create function to get current time every 30s
-    // -- set new value for time in firebase at every check
-    // -- create event listener to check for value changes in firebase
-    // -- everytime the value changes (everytime the time changes by a minute):
-      // -- recalculate table values, clear table, repost new values
+  // On document load
+  $(document).ready(function() {
 
-  checkTime = function(){
-    currentTime = moment();
-    currentTimeConverted = moment(currentTime).format("HH:mm")
+    loadTable();
+    setInterval(checkTime, 1000)
+    setInterval(loadTable, 30000)
 
-    $("#currentTime").text(currentTimeConverted)
-  }
-
-   //Event listener for database value changes
-
-  //  database.ref("time").on("value", function(snapshot){
-  //   database.ref("time").set({
-  //     currentTimeFB: currentTimeConverted
-  //   })
-
-
-  // })
-
+  });
   
